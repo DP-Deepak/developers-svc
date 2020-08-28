@@ -5,6 +5,8 @@ import { envVariable } from './config/configuration';
 import { authRouter } from './routes/api/auth';
 import { postsRouter } from './routes/api/posts';
 import { profileRouter } from './routes/api/profile';
+
+
 const app = express()
 // Connect DataBase
 connectDB();
