@@ -3,7 +3,8 @@ import * as express from 'express';
 import { ProfileModel } from '../../models/ProfileModel';
 import { check, validationResult } from 'express-validator'
 import { UserModel } from '../../models/UserModel';
-
+import * as request from 'request';
+import { envVariable } from '../../config/configuration';
 
 
 export const profileRouter = express.Router();
@@ -261,3 +262,29 @@ profileRouter.delete('/education/:edu_id', middleware,
       res.status(500).send('Server Error')
     }
   })
+
+// @route      GET /api/profile/github/:username
+// @desc       Get user repos from github
+// @access     Public
+profileRouter.get('/github/:username', (req, res) => {
+  try {
+    const options = {
+      uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${envVariable.githubClientID}&client_secret=${envVariable.githubSecret}`,
+      method: 'GET',
+      headers: { 'user-agent': 'node-js' }
+    }
+    console.log('==uri===', options.uri);
+
+    request(options, (error, response, body) => {
+      if (error) console.error(error)
+      if (response.statusCode !== 200) {
+        return res.status(404).send('No Github profile found')
+      }
+
+      res.json(JSON.parse(body))
+    })
+  } catch (error) {
+    console.log('Error in profile:', error.message);
+    res.status(500).send('Server Error')
+  }
+})

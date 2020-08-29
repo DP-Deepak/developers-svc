@@ -17,6 +17,8 @@ export const middleware = (req, res, next) => {
     const decoded = jwt.verify(token, envVariable.jwtSecret)
 
     req.user = decoded.user;
+    console.log('==req.user===', req.user);
+
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is not valid' })
