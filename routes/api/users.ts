@@ -17,16 +17,21 @@ usersRouter.post('/', [
   check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
 ],
   async (req, res) => {
-    console.log(req.body);
+    console.log('users: ', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('==23==:', errors.array());
       return res.status(400).json({ errors: errors.array() })
     }
 
+    console.log('==26==: ');
     const { name, email, password } = req.body;
+    console.log('==28==: ', name, email, password);
     try {
       // Check if user exist
+      console.log('==29==: ', name, email, password);
       let user = await UserModel.findOne({ email })
+      console.log('==31==: ', user);
       if (user) {
         return res
           .status(400)
