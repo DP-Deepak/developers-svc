@@ -3,6 +3,7 @@ import * as express from 'express';
 import { ProfileModel } from '../../models/ProfileModel';
 import { check, validationResult } from 'express-validator'
 import { UserModel } from '../../models/UserModel';
+import { PostModel } from '../../models/PostModel';
 import * as request from 'request';
 import { envVariable } from '../../config/configuration';
 
@@ -142,7 +143,8 @@ profileRouter.get('/user/:user_id', async (req, res) => {
 // @access     public
 profileRouter.delete('/', middleware, async (req, res) => {
   try {
-    // @todo - remove users post
+    // Remove user post
+    await PostModel.deleteMany({ user: req.user.id })
     // REmove profile
     await ProfileModel.findOneAndRemove({ user: req.user.id })
     await UserModel.findOneAndRemove({ _id: req.user.id })
