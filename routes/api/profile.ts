@@ -19,11 +19,11 @@ profileRouter.get('/me', middleware, async (req, res) => {
       return res.status(400).json({ msg: 'There is no profile for this user' })
     }
 
+    res.json(profile)
   } catch (e) {
     console.log('Error in profile:', e.message);
     res.status(500).send('Server Error')
   }
-  res.send('Profile route')
 })
 
 
